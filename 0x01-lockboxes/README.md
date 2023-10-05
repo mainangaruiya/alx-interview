@@ -10,3 +10,4 @@ There can be keys that do not have boxes
 The first box boxes[0] is unlocked
 Return True if all boxes can be opened, else return False
 
+![image](https://github.com/mainangaruiya/alx-interview/assets/100405059/ef22e693-1328-4cf2-b19d-aca3cc4c9ffc)
