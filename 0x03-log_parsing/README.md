@@ -1,6 +1,4 @@
-Tasks
-0. Log parsing
-mandatory
+Log parsing
 Write a script that reads stdin line by line and computes metrics:
 
 Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size> (if the format is not this one, the line must be skipped)
@@ -14,22 +12,6 @@ format: <status code>: <number>
 status codes should be printed in ascending order
 Warning: In this sample, you will have random value - it’s normal to not have the same output as this one.
 
-alexa@ubuntu:~/0x03-log_parsing$ cat 0-generator.py
-#!/usr/bin/python3
-import random
-import sys
-from time import sleep
-import datetime
-
-for i in range(10000):
-    sleep(random.random())
-    sys.stdout.write("{:d}.{:d}.{:d}.{:d} - [{}] \"GET /projects/260 HTTP/1.1\" {} {}\n".format(
-        random.randint(1, 255), random.randint(1, 255), random.randint(1, 255), random.randint(1, 255),
-        datetime.datetime.now(),
-        random.choice([200, 301, 400, 401, 403, 404, 405, 500]),
-        random.randint(1, 1024)
-    ))
-    sys.stdout.flush()
 
 alexa@ubuntu:~/0x03-log_parsing$ ./0-generator.py | ./0-stats.py 
 File size: 5213
@@ -74,4 +56,3 @@ Traceback (most recent call last):
 KeyboardInterrupt
     sleep(random.random())
 KeyboardInterrupt
-alexa@ubuntu:~/0x03-log_parsing$ 
