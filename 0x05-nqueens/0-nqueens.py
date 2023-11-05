@@ -1,81 +1,91 @@
 #!/usr/bin/python3
-"""finder module
-"""
+'''N Queens Challenge'''
 
 import sys
 
-solution = []
-"""list solutions
-"""
-n = 0 #chessborad size
 
-pos = None #posible solutions
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
 
-def get_input():
-	global n 
-	n = 0
-	if len(sys.argv) != 2:
-		print ("Usage: nqueens N")
-		sys.exit(1)
-		try:
-			n = int(sys.argv[1])
-		except Exception:
-			print("N must be a number")
-			sys.exit(1)
-		if n < 4:
-			print("N must least 4")
-			sys.exit(1)
-		return n
+    try:
+        n = int(sys.argv[1])
+    except ValueError:
+        print('N must be a number')
+        exit(1)
 
-def is_attacking(pos0 pos1):
-	if (pos0[0] == pos1[0]) or (pos0[1] == pos1[1]):
-		return True
-	return abs(pos0[0] -pos1[0]) == abs(pos0[1] - pos1[1])
+    if n < 4:
+        print('N must be at least 4')
+        exit(1)
 
-def group_exists(groups):
-	#check if solution exists in group and returns boolean result
-	global solutions
-	for stn in solutions:
-		i = 0
-		for stn_pos in stn:
-			for grp_pos in group:
-				if stn_pos[0] == grp_pos[0] and stn_pos[1] == grp_pos[1]:
-					i += 1 
+    solutions = []
+    placed_queens = []  # coordinates format [row, column]
+    stop = False
+    r = 0
+    c = 0
 
-		if i == n:
-			return True
-	return False 
+    # iterate thru rows
+    while r < n:
+        goback = False
+        # iterate thru columns
+        while c < n:
+            # check is current column is safe
+            safe = True
+            for cord in placed_queens:
+                col = cord[1]
+                if(col == c or col + (r-cord[0]) == c or
+                        col - (r-cord[0]) == c):
+                    safe = False
+                    break
 
-def build_solution(row, group):
-	"""nqueens problemis solved
-	"""
-	global solutions
-	global n 
-	if row == n:
-		tmp0 = group.copy()
-		if not group_exists(tmp0):
-			solution.append(tmp0)
+            if not safe:
+                if c == n - 1:
+                    goback = True
+                    break
+                c += 1
+                continue
 
-	else:
-		for col in range(n):
-			a = (row * n) + col
-			matches = zip(list([pos[a]]) * len(group), group)
-            used_positions = map(lambda x: is_attacking(x[0], x[1]), matches)
-            group.append(pos[a].copy())
-            if not any(used_positions):
-                build_solution(row + 1, group)
-            group.pop(len(group) - 1)
+            # place queen
+            cords = [r, c]
+            placed_queens.append(cords)
+            # if last row, append solution and reset all to last unfinished row
+            # and last safe column in that row
+            if r == n - 1:
+                solutions.append(placed_queens[:])
+                for cord in placed_queens:
+                    if cord[1] < n - 1:
+                        r = cord[0]
+                        c = cord[1]
+                for i in range(n - r):
+                    placed_queens.pop()
+                if r == n - 1 and c == n - 1:
+                    placed_queens = []
+                    stop = True
+                r -= 1
+                c += 1
+            else:
+                c = 0
+            break
+        if stop:
+            break
+        # on fail: go back to previous row
+        # and continue from last safe column + 1
+        if goback:
+            r -= 1
+            while r >= 0:
+                c = placed_queens[r][1] + 1
+                del placed_queens[r]  # delete previous queen coordinates
+                if c < n:
+                    break
+                r -= 1
+            if r < 0:
+                break
+            continue
+        r += 1
 
-def get_solutions():
-	"""solution fot given board
-	"""
-	global pos, n
-	pos = list(map(lambda x: [x // n, x % n], range(n ** 2)))
-	a = 0
-	group = []
-	build_solution(a, group)
-
-n = get_input()
-get_solutions()
-for solution in solutions:
-	print(solution)
+    for idx, val in enumerate(solutions):
+        if idx == len(solutions) - 1:
+            print(val, end='')
+        else:
+            print(val)
