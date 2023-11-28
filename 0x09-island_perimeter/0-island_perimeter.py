@@ -2,10 +2,12 @@
 
 def island_perimeter(grid):
     perimeter = 0
-    if type(grid) != list:
+
+    if not isinstance(grid, list):
         return 0
 
     n = len(grid)
+
     for i, row in enumerate(grid):
         m = len(row)
 
@@ -19,6 +21,7 @@ def island_perimeter(grid):
                 i == n - 1 or (len(grid[i + 1]) > j and grid[i + 1][j] == 0),
                 j == 0 or row[j - 1] == 0,
             )
+
             perimeter += sum(edges)
 
     return perimeter
